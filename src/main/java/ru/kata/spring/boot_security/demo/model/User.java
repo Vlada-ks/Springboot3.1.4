@@ -62,7 +62,7 @@ public class User implements UserDetails {
     @Column(name = "username", unique = true)
     private String username;
 
-//    @NotEmpty(message = "Password should not be empty")
+    //    @NotEmpty(message = "Password should not be empty")
 //    @Size(min = 5, max = 100, message = "Password should be between 5 and 100 characters")
     @Column(name = "password")
     private String password;

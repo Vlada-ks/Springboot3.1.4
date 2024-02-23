@@ -64,24 +64,12 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
 
         User userById = userRepository.getById(user.getId());
-//
-//        if (!user.getPassword().equals(userById.getPassword())){
-//            user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        } else {
-//            user.setPassword(userById.getPassword());
-//        }
 
-//        if (!user.getPassword().equals(userRepository.getById(user.getId()).getPassword())){
-//            user1.setPassword(passwordEncoder.encode(user.getPassword()));
-//        } else {
-//            user1.setPassword(user.getPassword());
-//        }
-        if (passwordEncoder.matches(user.getPassword(), userById.getPassword())){
-            user.setPassword(userById.getPassword());
-        } else {
+        if (!user.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(userById.getPassword());
         }
-
         userRepository.save(user);
     }
 }

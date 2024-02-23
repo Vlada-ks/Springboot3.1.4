@@ -52,17 +52,17 @@ public class AdminController {
     @GetMapping("/update/{id}")
     public String showUpdate(@PathVariable("id") Integer id, Model model) {
         User user = userServiceImpl.getUserById(id);
-        model.addAttribute("newUser", user);
-        return "userAdd";
+        model.addAttribute("newUpdate", user);
+        return "userUpdate";
     }
 
 
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user, BindingResult bindingResult, BindingResult bindingResultForId, Model model) {
-        model.addAttribute("newUser", userServiceImpl.getUserById(id));
+        model.addAttribute("newUpdate", userServiceImpl.getUserById(id));
         if (bindingResult.hasErrors() || bindingResultForId.hasErrors()) {
             user.setId(id);
-            return "userAdd";
+            return "userUpdate";
         }
         userServiceImpl.updateUser(user);
         return "redirect:/admin";
