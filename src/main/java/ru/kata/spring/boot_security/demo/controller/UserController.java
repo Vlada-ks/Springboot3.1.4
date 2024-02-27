@@ -21,6 +21,6 @@ public class UserController {
     @GetMapping
     public String userIndex(Model model, Principal principal) {
         model.addAttribute("user", userServiceImpl.findByUsername(principal.getName()));
-        return "user";
+        return "userPanel";
     }
 }

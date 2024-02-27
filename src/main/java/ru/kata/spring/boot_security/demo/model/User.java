@@ -5,6 +5,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
@@ -23,9 +24,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
@@ -58,12 +58,10 @@ public class User implements UserDetails {
     private Integer salary;
 
     @NotEmpty(message = "Username should not be empty")
-    @Size(min = 5, max = 30, message = "Username should be between 2 and 30 characters")
+    @Size(min = 2, max = 30, message = "Username should be between 2 and 30 characters")
     @Column(name = "username", unique = true)
     private String username;
 
-    //    @NotEmpty(message = "Password should not be empty")
-//    @Size(min = 5, max = 100, message = "Password should be between 5 and 100 characters")
     @Column(name = "password")
     private String password;
 
@@ -75,12 +73,12 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private Collection<Role> roles;
 
     public User() {
     }
 
-    public User(Integer id, String name, String surname, String position, Integer salary, String username, String password, Set<Role> roles) {
+    public User(Integer id, String name, String surname, String position, Integer salary, String username, String password, Collection<Role> roles) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -90,7 +88,6 @@ public class User implements UserDetails {
         this.password = password;
         this.roles = roles;
     }
-
 
     public Integer getId() {
         return id;
@@ -162,7 +159,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
 
     public String getPassword() {
@@ -173,11 +170,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 
